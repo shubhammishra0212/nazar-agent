@@ -197,6 +197,8 @@ def parse(text):
         body = text[m.end():end]
         body = re.sub(r"[*#`_]+", "", body)
         body = re.sub(r"\s+", " ", body).strip(" -•–")
+        if tag in ("D5", "D7", "D8"):        # the model sometimes echoes the instruction as a question first
+            body = re.sub(r"^[^?.।]{3,80}\?\s*", "", body)
         if body and tag not in found:
             found[tag] = body
     return found

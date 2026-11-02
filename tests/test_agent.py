@@ -144,6 +144,11 @@ class Checker(unittest.TestCase):
         self.assertIsNone(llm.check("WHY3", "Why is the motor shaking? Its mount has worked loose.", "en", self.allowed))
         self.assertIsNotNone(llm.check("WHY3", "The motor shakes because its mount is loose.", "en", self.allowed))
 
+    def test_echoed_instruction_is_stripped(self):
+        got = llm.parse("[D7] How to stop it coming back? Add the mount to the checklist.\n[WHY1] Why? Because.")
+        self.assertEqual(got["D7"], "Add the mount to the checklist.")
+        self.assertEqual(got["WHY1"], "Why? Because.")
+
     def test_parse_tags(self):
         got = llm.parse("**[WHY1]** First.\n[WHY2]: Second one\nD5: Do it.\n[D8] Close.")
         self.assertEqual(got, {"WHY1": "First.", "WHY2": "Second one", "D5": "Do it.", "D8": "Close."})
