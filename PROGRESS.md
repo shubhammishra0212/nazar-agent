@@ -24,6 +24,7 @@ After any restart: read this file and `git log` first.
   no-cause warm 15.1 s, 7/8 passed (WHY3 failed the why-question check -> template text kept).
   Same input gives the same text (fixed seed). All numbers in LLM text are checked against the facts.
 - Service stopped after tests; port 8766 free.
+- README.md written.
 
 ## Scope change (coordinator, 2 Nov)
 - 8D report is ENGLISH ONLY for now. Hindi = planned / template only, not shown in the demo.
@@ -37,7 +38,7 @@ After any restart: read this file and `git log` first.
 - Not tested against the real console or real line data yet (demo logs only).
 
 ## In progress
-- README.md
+- docs/agent.md + PDF
 
 ## Next
-- docs/agent.md + PDF (docs/NAZAR-03-Root-Cause-Agent.pdf, copy to ../PDFs/).
+- Render PDF, copy to ../PDFs/, check it.
