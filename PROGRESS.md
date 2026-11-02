@@ -10,7 +10,7 @@ After any restart: read this file and `git log` first.
 - LLM worker (`llm.py`): MLX load + generate on one thread, wall-clock budget, number/blame/language checks.
 - Engine + HTTP service on 127.0.0.1:8766 (`engine.py`, `service.py`), contract section 5.
 - Demo log generator (`tools/make_demo_log.py`): loose-mount, no-cause, dim-light, few.
-- Unit tests (`tests/test_agent.py`): 15 tests pass (`python3 -m unittest discover -s tests`).
+- Unit tests (`tests/test_agent.py`): 16 tests pass (`python3 -m unittest discover -s tests`).
 - `run.sh`, `Start Agent.command`.
 
 ## Verified
@@ -25,6 +25,9 @@ After any restart: read this file and `git log` first.
   Same input gives the same text (fixed seed). All numbers in LLM text are checked against the facts.
 - Service stopped after tests; port 8766 free.
 - README.md written.
+- docs/agent.md + docs/NAZAR-03-Root-Cause-Agent.pdf (7 pages, all pages checked as PNG), copied to
+  ../PDFs/. No Devanagari in the PDF.
+- D4 now names a second significant sensor ("Also linked") instead of calling it unlinked (unit-tested).
 
 ## Scope change (coordinator, 2 Nov)
 - 8D report is ENGLISH ONLY for now. Hindi = planned / template only, not shown in the demo.
@@ -38,7 +41,7 @@ After any restart: read this file and `git log` first.
 - Not tested against the real console or real line data yet (demo logs only).
 
 ## In progress
-- docs/agent.md + PDF
+- Nothing.
 
 ## Next
-- Render PDF, copy to ../PDFs/, check it.
+- Test with the real console (POST from the page, CORS from origin null) and a real line log.
