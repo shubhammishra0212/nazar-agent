@@ -74,13 +74,19 @@ def _facts_en(s, source):
           f"So far the gate removed {s['reject']} washers and {s['hold']} were held for a hand check. "
           f"Keep every washer going through the camera and check held washers by hand until the cause is confirmed.")
 
-    others = [x for x in s["strata"] if x["testable"] and x["factor"] != key]
+    others = [x for x in s["strata"] if x["testable"] and x["factor"] != key and not x["significant"]]
+    also = [x for x in s["strata"] if x["significant"] and x["factor"] != key]
     other_txt = "; ".join(f"{text('en', x['factor'])['label'].lower()}: {fmt.pct(x['high_rate'])}% in the amber "
                           f"state against {fmt.pct(x['low_rate'])}% otherwise" for x in others)
+    also_txt = "; ".join(f"{text('en', x['factor'])['label'].lower()}: {fmt.pct(x['high_rate'])}% in the amber "
+                         f"state against {fmt.pct(x['low_rate'])}% otherwise ({fmt.pval(x['p_value'])})" for x in also)
     if s["cause"]:
         d4 = (f"{K['cause']} Evidence: {fmt.pct(st['high_rate'])}% of washers were flagged while {K['state']}, against "
               f"{fmt.pct(st['low_rate'])}% otherwise: {fmt.ratio(st['ratio'])} times the normal rate (Fisher's exact test, "
               f"{fmt.pval(st['p_value'])}).")
+        if also_txt:
+            d4 += (f" Also linked: {also_txt}. These states may come together; check both, starting with "
+                   f"the strongest link.")
         if other_txt:
             d4 += f" The other sensors showed no clear link ({other_txt})."
         d4 += _untested(s, key, "en")
@@ -192,13 +198,18 @@ def _facts_hi(s, source):
     d3 = head + (text("hi", s["cause"])["contain"] if not s["hint"] else
                  "कारण पक्का होने तक हर वॉशर कैमरे से गुज़रता रहे और होल्ड वाले वॉशर हाथ से जाँचे जाएँ।")
 
-    others = [x for x in s["strata"] if x["testable"] and x["factor"] != key]
+    others = [x for x in s["strata"] if x["testable"] and x["factor"] != key and not x["significant"]]
+    also = [x for x in s["strata"] if x["significant"] and x["factor"] != key]
     other_txt = "; ".join(f"{text('hi', x['factor'])['label']}: पीली स्थिति में {fmt.pct(x['high_rate'])}%, बाकी समय "
                           f"{fmt.pct(x['low_rate'])}%" for x in others)
+    also_txt = "; ".join(f"{text('hi', x['factor'])['label']}: पीली स्थिति में {fmt.pct(x['high_rate'])}%, बाकी समय "
+                         f"{fmt.pct(x['low_rate'])}% ({fmt.pval(x['p_value'])})" for x in also)
     if s["cause"]:
         d4 = (f"{K['cause']} सबूत: जब {K['state']}, तब {fmt.pct(st['high_rate'])}% वॉशर फ्लैग हुए; बाकी समय "
               f"{fmt.pct(st['low_rate'])}%, यानी {fmt.ratio(st['ratio'])} गुना (Fisher's exact test, "
               f"{fmt.pval(st['p_value'])})।")
+        if also_txt:
+            d4 += f" इनसे भी संबंध है: {also_txt}। ये स्थितियाँ साथ आ सकती हैं; दोनों जाँचें, सबसे मज़बूत से शुरू करें।"
         if other_txt:
             d4 += f" बाकी सेंसरों से कोई साफ़ संबंध नहीं मिला ({other_txt})।"
         d4 += _untested(s, key, "hi")

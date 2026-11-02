@@ -78,6 +78,18 @@ class Stories(unittest.TestCase):
 
 
 class Report(unittest.TestCase):
+    def test_second_linked_sensor_is_named(self):
+        req = demo.make("loose-mount", 42, use_llm=False)
+        for r in req["inspections"]:          # make the motor current follow the shaking
+            if r.get("vib", 0) > 0.08:
+                r["ma"] = 760.0
+        out = engine.build(req)
+        sig = [x["factor"] for x in out["stats"]["strata"] if x["significant"]]
+        self.assertEqual(sorted(sig), ["ma", "vib"])
+        d4 = out["report"]["sections"][3]["body"]
+        self.assertIn("Also linked", d4)
+        self.assertIn("motor strain", d4)
+
     def test_contract_shape(self):
         out = engine.build(demo.make("loose-mount", 42, use_llm=False))
         self.assertEqual(out["writer"], "template")
