@@ -92,9 +92,10 @@ class Handler(BaseHTTPRequestHandler):
                 req = json.loads(raw.decode("utf-8-sig"))
             except (UnicodeDecodeError, json.JSONDecodeError) as e:
                 return self._json({"ok": False, "error": f"body is not valid JSON: {e}"})
-            n = len(req.get("inspections") or []) if isinstance(req, dict) else 0
-            log(f"report: {n} rows, lang={req.get('lang', 'en') if isinstance(req, dict) else '?'}, "
-                f"use_llm={req.get('use_llm', True) if isinstance(req, dict) else '?'}")
+            if isinstance(req, dict):
+                rows = req.get("inspections")
+                log(f"report: {len(rows) if isinstance(rows, list) else 0} rows, lang={req.get('lang', 'en')}, "
+                    f"use_llm={req.get('use_llm', True)}")
             out = engine.build(req)
             if out.get("ok"):
                 st = out.get("stats", {})
