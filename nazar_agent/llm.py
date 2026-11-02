@@ -173,6 +173,7 @@ def build_messages(draft_en, draft_out, lang):
             "repair, the operator stops the belt and acts on alarms, quality checks the result.\n"
             "[D7]: how to stop it coming back, from the draft.\n"
             "[D8]: how and when to close the report, consistent with VERIFICATION.\n"
+            "Keep every section about as long as its draft, never longer.\n"
             f"Write in {language}. Output exactly these eight tags in this order, each at the start of its own line "
             "followed by its text, and nothing else.")
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
@@ -225,12 +226,34 @@ def _devanagari_share(text):
     return sum("ऀ" <= c <= "ॿ" for c in letters) / len(letters)
 
 
+def _repeats(body):
+    """True if a sentence appears twice or a word is doubled ('8D 8D'): typical small-model loops."""
+    words = body.split()
+    if any(a == b and len(a) > 1 for a, b in zip(words, words[1:])):
+        return True
+    sents = [re.sub(r"\W+", " ", x).strip().lower() for x in re.split(r"[.।?!]", body)]
+    sents = [x for x in sents if len(x) > 8]
+    return len(sents) != len(set(sents))
+
+
+def _asks_why(body, lang):
+    """A 5-Why step must still be a 'why' question followed by its answer."""
+    q, mark, answer = body.partition("?")
+    if not mark or len(answer.strip()) < 4:
+        return False
+    return ("क्यों" in q or "कैसे" in q or "कहाँ" in q) if lang == "hi" else bool(re.search(r"\b(why|how|where|what)\b", q, re.I))
+
+
 def check(tag, body, lang, allowed):
     """None if the section can be used, else the reason it cannot."""
     if not body or len(body) < 12:
         return "empty"
     if len(body) > 700:
         return "too long"
+    if _repeats(body):
+        return "repeats itself"
+    if tag.startswith("WHY") and not _asks_why(body, lang):
+        return "not a why-question and answer"
     extra = numbers(body) - allowed
     if extra:
         return "invented number(s): " + ", ".join(sorted(extra))

@@ -133,6 +133,17 @@ class Checker(unittest.TestCase):
         self.assertIsNone(llm.check("D7", "हर शिफ्ट मोटर माउंट के पेंच जाँचें और अलार्म पर तुरंत कार्रवाई करें।", "hi",
                                     self.allowed))
 
+    def test_loops_and_why_form(self):
+        self.assertEqual(llm.check("D8", "Close the 8D 8D report now. All good.", "en", self.allowed), "repeats itself")
+        self.assertEqual(llm.check("D8", "सुधार काम कर गया। टीम को धन्यवाद दें। सुधार काम कर गया।", "hi", self.allowed),
+                         "repeats itself")
+        self.assertIsNotNone(llm.check("WHY1", "क्या ज़्यादा वॉशर रिजेक्ट हुए? क्योंकि मोटर हिल रही थी।", "hi",
+                                       self.allowed))
+        self.assertIsNone(llm.check("WHY1", "ज़्यादा वॉशर रिजेक्ट क्यों हुए? क्योंकि मोटर हिल रही थी।", "hi",
+                                    self.allowed))
+        self.assertIsNone(llm.check("WHY3", "Why is the motor shaking? Its mount has worked loose.", "en", self.allowed))
+        self.assertIsNotNone(llm.check("WHY3", "The motor shakes because its mount is loose.", "en", self.allowed))
+
     def test_parse_tags(self):
         got = llm.parse("**[WHY1]** First.\n[WHY2]: Second one\nD5: Do it.\n[D8] Close.")
         self.assertEqual(got, {"WHY1": "First.", "WHY2": "Second one", "D5": "Do it.", "D8": "Close."})
