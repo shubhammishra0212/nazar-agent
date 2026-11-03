@@ -42,6 +42,20 @@ KNOW = {
                "checks the next lot for scars at the hole.",
         "prevent": "Add punch wear and burr height to the daily tool check, and round and polish every guide edge.",
     },
+    "patch": {
+        "what": "dark patches (stains or missing finish) on the face",
+        "cause": "something dark was left on or burnt into the face: oil, coolant or scale from the press, a heat mark "
+                 "from the tooling, or a spot where the plating or finish did not take",
+        "why": ["Why was the washer rejected? The camera found dark patches on its face that good washers do not have.",
+                "Why are there dark patches? Something stained or marked the face, or the finish is missing there.",
+                "Why was it stained? Oil, coolant or scale from the press stayed on the washer, or the face got hot "
+                "against the tooling.",
+                "Why did it stay on? Washers are not cleaned and dried between the press and finishing.",
+                "Why was it not caught earlier? Nothing checks the face between the press and this station."],
+        "act": "Maintenance checks the press for oil and coolant leaks and cleans the tooling. The operator cleans and "
+               "dries washers before finishing. Quality checks the next lot for stains and bare spots.",
+        "prevent": "Add a wash and dry step after pressing and check the plating bath at every shift start.",
+    },
     "other": {
         "what": "surface damage that good washers do not have",
         "cause": "the washer was hit, scraped or marked after pressing, during handling or transfer",
