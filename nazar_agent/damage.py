@@ -130,7 +130,7 @@ def draft(req, s, source="live"):
 
     title = "Damaged washers rejected: " + " and ".join(x.lower() for x in names)
     summary = (f"{n_all} washers inspected; the AI found {n_rej} damaged ({', '.join(x.lower() for x in labels)}) and "
-               f"the reject gate pushed them off the line.")
+               f"the reject gate took them out of the line.")
     d1 = ("Team Parakh: line operator (runs the belt, keeps the rejected washers), maintenance (press tooling and "
           f"conveyor) and quality (the NAZAR inspection station, owns this report). Data: NAZAR inspection log ({source}).")
     n_all = max(n_all, n_rej)
@@ -142,7 +142,7 @@ def draft(req, s, source="live"):
           f"{n_rej} for visible damage. " + "; ".join(one(r) for r in rows) + ". "
           + " ".join(f"{k.capitalize()}: {KNOW[k]['what']}." for k in kinds)
           + (f" The other {n_all - n_rej - s['hold']} washers passed." if n_all - n_rej - s["hold"] > 0 else ""))
-    d3 = ("The reject gate pushed each damaged washer off the line as soon as the AI judged it, so none went on with "
+    d3 = ("The reject gate took each damaged washer out of the line as soon as the AI judged it, so none went on with "
           "the good parts. Keep the rejected washers apart, labelled with their part numbers, for the hand check. "
           "Hold the rest of the same lot and run it through NAZAR before it is shipped.")
     d4 = " ".join(f"{k.capitalize()}: most likely {KNOW[k]['cause']}." for k in kinds)
